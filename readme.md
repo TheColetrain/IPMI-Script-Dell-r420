@@ -5,13 +5,15 @@ This is my personal scripts. Feel free to modify and improve.
 They are provided "as is", and I take no responsibility if they break something on your end. 
 ----
 
-#1 These commands work on a Dell r420 (different than the r710)
+#1 These commands work on a Dell r420 (different than the r710) I bet they work on most 12 gen Dell servers, not tested.
 
 #2 I run this commands on a local machine, as opposed to it being remote.  Remote is more secure, but I have not exposed it to the internet at this time.
 
 #3 my process is scalable, different temps yield different fan speeds as opposed to ON/OFF
 
 #4 if you adjust one number, it trickles down the scale 
+
+I would first find the codes that can set your fan speeds and modify this to suit your needs.
 
 I used this to get Hex codes  
 https://www.hexadecimaldictionary.com/hexadecimal/0xf/
