@@ -1,16 +1,25 @@
 #!/bin/bash
 
 
-#OBJECTIVE - If temperature over variable enable/disable fan controll
+#OBJECTIVE - Use ipmitool to deterine temperatures
+#If temperature over variable set fan controll accordingly
+#or enable/disable fan controll
+
 # be sure IpmiTool is installed on your device
 
-
+### commands to acess crontab and link to script
 #notes nano /etc/crontab
 #notes  crontab -u root -e
 
+## I did a lot of "echo's" so that i could test my process as I went forward
+## You can omit some echos, if you like. (or just put a # in front)
 
-#### part one - only need to set HIGHTEMP to your choice - kicks in manual mode
-#all other temps auto set
+#Works with 3 variables, mostly Inlet temp (part 2A)
+# but also CPU #1 & #2 temperatures (part 2B)
+
+#### part one - SET VARIABLES only need to set HIGHTEMP to your choice
+# - kicks in manual mode
+#all other temps auto set by cascading
 HIGHTEMP=26
 # you may set #INC = Increment to other than 1 if you want a step-down by more than 1
 INC=1
@@ -18,7 +27,7 @@ INC=1
 CPU1MAX=50
 CPU2MAX=49
 
-###part 2A
+####part 2A
 echo HIGHTEMP "$HIGHTEMP"
 
 HIGHTEMP2=$((HIGHTEMP - INC))
@@ -44,7 +53,7 @@ echo CPU1MAX "$CPU1MAX"
 echo CPU2MAX "$CPU2MAX"
 
 #you can change the last# if you want a different CPU threshold for step 2 of CPUTEMP
-#didnt do the math like above
+#didnt do the math with "INC" like above
 
 CPU1MAX2=$((CPU1MAX - 1))
 CPU2MAX2=$((CPU2MAX - 1))
@@ -61,6 +70,8 @@ echo CPU2MAX3 "$CPU2MAX3"
 #this sets your fan speed, you may want to select different Hexadecimal codes
 #based on your needs FS=FAN SPEED. My auto controll is
 #set to 30% min, this works for me.
+
+#Hex conversion link https://www.hexadecimaldictionary.com/hexadecimal/0xf/
 
 FS22=0x16
 FS20=0x14
