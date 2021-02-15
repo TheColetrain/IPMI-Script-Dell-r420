@@ -7,9 +7,9 @@ They are provided "as is", and I take no responsibility if they break something 
 
 #1 These commands work on a Dell r420 (different than the r710)
 
-#2 I run this commands on a local machine, as oposed to it being remode.  Remote is more secure, but I have not exposed it to the interet at this time.
+#2 I run this commands on a local machine, as opposed to it being remote.  Remote is more secure, but I have not exposed it to the internet at this time.
 
-#3 my process is scalable, different temps yield different fan speeds as oposed to ON/OFF
+#3 my process is scalable, different temps yield different fan speeds as opposed to ON/OFF
 
 #4 if you adjust one number, it trickles down the scale 
 
