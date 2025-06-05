@@ -9,8 +9,6 @@ For a Dell Poweredge r420 using ipmitool and crontab  - changes fans based on se
 
 #3 my process is scalable, different temps yield different fan speeds as opposed to ON/OFF
 
-#4 if you adjust one number, it trickles down the scale 
-
 I would first find the codes that can set your fan speeds and modify this to suit your needs.
 
 I used this to get Hex codes  
