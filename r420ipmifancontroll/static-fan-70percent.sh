@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Trap to revert to auto fan control if script is interrupted
+trap 'echo "Script interrupted - reverting to auto fan control..."; ipmitool raw 0x30 0x30 0x01 0x01; exit' INT TERM EXIT
+
+
 #OBJECTIVE - Use ipmitool to deterine temperatures
 #If temperature over variable set fan controll accordingly
 #or enable/disable fan controll
@@ -16,14 +20,8 @@
 CPU1MAX=75
 CPU2MAX=75
 
-# Log rotation - keep last 3 runs
-# View logs: cat /tmp/fanscript.log (current) or tail -f /tmp/fanscript.log (live)
-# Previous runs: cat /tmp/fanscript.log.1 or cat /tmp/fanscript.log.2
 
-LOGFILE="/tmp/fanscript.log"
-[ -f "$LOGFILE.2" ] && rm "$LOGFILE.2"
-[ -f "$LOGFILE.1" ] && mv "$LOGFILE.1" "$LOGFILE.2"
-[ -f "$LOGFILE" ] && mv "$LOGFILE" "$LOGFILE.1"
+
 
 #### Part 2B
 #I only used 2 temps for  both CPU's just as a safety mechanism in case
@@ -81,12 +79,20 @@ FS14=0xe
 FS12=0xc
 FS10=0xa
 
-
-
-
 ###########  VVVVVVVVVVVVVVVVVVVVV EDIT THAT
 STATICFAN=$FS70
 ###  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ EDIT THAT
+
+# Log rotation - keep last 3 runs
+# View logs: cat /tmp/fanscript.log (current) or tail -f /tmp/fanscript.log (live)
+# Previous runs: cat /tmp/fanscript.log.1 or cat /tmp/fanscript.log.2
+
+LOGFILE="/tmp/fanscript.log"
+[ -f "$LOGFILE.2" ] && rm "$LOGFILE.2"
+[ -f "$LOGFILE.1" ] && mv "$LOGFILE.1" "$LOGFILE.2"
+[ -f "$LOGFILE" ] && mv "$LOGFILE" "$LOGFILE.1"
+
+
 
 #####Part 4
 
@@ -128,6 +134,9 @@ while true; do
     sleep 10
 done
 
+
+
+
 # COPY/PASTE LOG COMMANDS (these are just comments for reference):
 # View current log: cat /tmp/fanscript.log
 # View last 20 lines: tail -20 /tmp/fanscript.log
@@ -148,8 +157,3 @@ cd /root/IPMI-Script-Dell-r420/r420ipmifancontroll
 
 #To tail the log from another terminal:
 tail -f /tmp/fanscript.log
-
-
-
-
-
