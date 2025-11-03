@@ -80,7 +80,7 @@ FS12=0xc
 FS10=0xa
 
 ###########  VVVVVVVVVVVVVVVVVVVVV EDIT THAT
-STATICFAN=$FS70
+STATICFAN=$FS66
 ###  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ EDIT THAT
 
 # Log rotation - keep last 3 runs
@@ -148,11 +148,11 @@ done
 screen -S fancontrol
 
 # Run the script inside screen
-./static-fan-70percent.sh
+./static-fan-controll.sh
 
 # screen -S fancontrol
 cd /root/IPMI-Script-Dell-r420/r420ipmifancontroll
-./static-fan-70percent.sh
+./static-fan-controll.sh
 
 
 #To tail the log from another terminal:
