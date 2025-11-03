@@ -1,3 +1,11 @@
+## Attribution
+
+This project was originally based on work by NoLooseEnds:
+- Original repository: https://github.com/NoLooseEnds/Scripts
+- Used as foundation for Dell PowerEdge R420 fan control
+
+The code has since been significantly modified and extended for different use cases.
+
 # INFO
 
 For a Dell Poweredge r420 using ipmitool and crontab  - changes fans based on sensor temperatures
@@ -10,6 +18,7 @@ For a Dell Poweredge r420 using ipmitool and crontab  - changes fans based on se
 #3 my process is scalable, different temps yield different fan speeds as opposed to ON/OFF
 
 #4 if you adjust one number, it trickles down the scale 
+
 
 I would first find the codes that can set your fan speeds and modify this to suit your needs.
 
