@@ -121,7 +121,7 @@ while true; do
     fi
     
     # Wait 30 seconds before next check
-    sleep 30
+    sleep 10
 done
 
 # COPY/PASTE LOG COMMANDS (these are just comments for reference):
