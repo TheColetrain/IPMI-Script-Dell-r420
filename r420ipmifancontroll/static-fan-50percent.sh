@@ -19,6 +19,7 @@ CPU2MAX=75
 # Log rotation - keep last 3 runs
 # View logs: cat /tmp/fanscript.log (current) or tail -f /tmp/fanscript.log (live)
 # Previous runs: cat /tmp/fanscript.log.1 or cat /tmp/fanscript.log.2
+
 LOGFILE="/tmp/fanscript.log"
 [ -f "$LOGFILE.2" ] && rm "$LOGFILE.2"
 [ -f "$LOGFILE.1" ] && mv "$LOGFILE.1" "$LOGFILE.2"
@@ -47,6 +48,7 @@ FANNAME=$(set | grep "STATICFAN=" | cut -d'$' -f2)
 #Hex conversion https://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html
 # type 40% as "40" into "decimal" box amd then add prefix of "0x"
 
+
 FS76=0x4c
 FS74=0x4a
 FS72=0x48
@@ -55,7 +57,6 @@ FS68=0x44
 FS66=0x42
 FS64=0x40
 FS62=0x3e
-FS60=0x3c
 FS60=0x3c
 FS58=0x3a
 FS56=0x38
