@@ -39,11 +39,8 @@ echo CPU2MAX "$CPU2MAX"
 # Static fan speed - change this to test different speeds
 # Start with 40% and adjust up/down based on temps and noise
 # FS40 is 40% and so on.  FS60 is 60% etc
-STATICFAN=$FS70
-###  ^^^^^^^ EDIT THAT
 
-## this is to pull from that for later
-FANNAME=$(set | grep "STATICFAN=" | cut -d'$' -f2)
+
 
 #Hex conversion https://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html
 # type 40% as "40" into "decimal" box amd then add prefix of "0x"
@@ -84,6 +81,13 @@ FS14=0xe
 FS12=0xc
 FS10=0xa
 
+
+
+
+###########  VVVVVVVVVVVVVVVVVVVVV EDIT THAT
+STATICFAN=$FS70
+###  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ EDIT THAT
+
 #####Part 4
 
 # This gets your temp numbers from IPMITOOL and sets them as a variable.
@@ -98,11 +102,11 @@ echo CPU 2 TEMP     "$TEMPCPU2"  C
 
 # part 5 - FINALE - this pulls it all together. IF temp over X then issue fan controll to AUTO
 
-echo "=== Setting fans to static ${FANNAME} and starting monitoring ===" | tee -a "$LOGFILE"
+echo "=== Setting fans to static $STATICFAN and starting monitoring ===" | tee -a "$LOGFILE"
 # Set static fan speed first
 ipmitool raw 0x30 0x30 0x01 0x00
 ipmitool raw 0x30 0x30 0x02 0xff "$STATICFAN"
-echo "Static fan set to ${FANNAME}%. Starting temperature monitoring..." | tee -a "$LOGFILE"
+echo "Static fan set to $STATICFAN %. Starting temperature monitoring..." | tee -a "$LOGFILE"
 
 # Monitoring loop
 while true; do
