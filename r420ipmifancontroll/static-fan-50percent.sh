@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #OBJECTIVE - Use ipmitool to deterine temperatures
 #If temperature over variable set fan controll accordingly
 #or enable/disable fan controll
@@ -11,23 +10,25 @@
 #notes nano /etc/crontab
 #notes  crontab -u root -e
 
-
-
 #### part one - SET VARIABLES 
 
 # set CPU1 & CPU2 MAX TEMP
 CPU1MAX=75
 CPU2MAX=75
 
-
+# Log rotation - keep last 3 runs
+# View logs: cat /tmp/fanscript.log (current) or tail -f /tmp/fanscript.log (live)
+# Previous runs: cat /tmp/fanscript.log.1 or cat /tmp/fanscript.log.2
+LOGFILE="/tmp/fanscript.log"
+[ -f "$LOGFILE.2" ] && rm "$LOGFILE.2"
+[ -f "$LOGFILE.1" ] && mv "$LOGFILE.1" "$LOGFILE.2"
+[ -f "$LOGFILE" ] && mv "$LOGFILE" "$LOGFILE.1"
 
 #### Part 2B
 #I only used 2 temps for  both CPU's just as a safety mechanism in case
 #somehow a CPU was running hotter than the inlet air tem, for some reason.
 echo CPU1MAX "$CPU1MAX"
 echo CPU2MAX "$CPU2MAX"
-
-
 
 ####Part 3
 
@@ -37,9 +38,13 @@ echo CPU2MAX "$CPU2MAX"
 # Static fan speed - change this to test different speeds
 # Start with 40% and adjust up/down based on temps and noise
 # FS40 is 40% and so on.  FS60 is 60% etc
-STATICFAN=$FS40
+STATICFAN=$FS50
+###  ^^^^^^^ EDIT THAT
 
-#Hex conversion https://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html  
+## this is to pull from that for later
+FANNAME=$(set | grep "STATICFAN=" | cut -d'$' -f2)
+
+#Hex conversion https://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html
 # type 40% as "40" into "decimal" box amd then add prefix of "0x"
 
 FS60=0x3c
@@ -69,12 +74,10 @@ FS14=0xe
 FS12=0xc
 FS10=0xa
 
-
 #####Part 4
 
 # This gets your temp numbers from IPMITOOL and sets them as a variable.
 #Three temps.   ICPU1 & CPU2
-
 
 TEMPCPU1=`ipmitool sdr type temperature | grep "Temp" | cut -d"|" -f5 | cut -d" " -f2 | sed -n 2p`
 TEMPCPU2=`ipmitool sdr type temperature | grep "Temp" | cut -d"|" -f5 | cut -d" " -f2 | sed -n 3p`
@@ -83,14 +86,13 @@ echo " -- current temperature --"
 echo CPU 1 TEMP     "$TEMPCPU1"  C
 echo CPU 2 TEMP     "$TEMPCPU2"  C
 
-
 # part 5 - FINALE - this pulls it all together. IF temp over X then issue fan controll to AUTO
 
-echo "=== Setting fans to static 40% and starting monitoring ==="
+echo "=== Setting fans to static ${FANNAME} and starting monitoring ===" | tee -a "$LOGFILE"
 # Set static fan speed first
 ipmitool raw 0x30 0x30 0x01 0x00
 ipmitool raw 0x30 0x30 0x02 0xff "$STATICFAN"
-echo "Static fan set to 40%. Starting temperature monitoring..."
+echo "Static fan set to ${FANNAME}%. Starting temperature monitoring..." | tee -a "$LOGFILE"
 
 # Monitoring loop
 while true; do
@@ -98,16 +100,23 @@ while true; do
     TEMPCPU1=`ipmitool sdr type temperature | grep "Temp" | cut -d"|" -f5 | cut -d" " -f2 | sed -n 2p`
     TEMPCPU2=`ipmitool sdr type temperature | grep "Temp" | cut -d"|" -f5 | cut -d" " -f2 | sed -n 3p`
 
-    echo "$(date): CPU1: ${TEMPCPU1}°C, CPU2: ${TEMPCPU2}°C"
+    echo "$(date): CPU1: ${TEMPCPU1}°C, CPU2: ${TEMPCPU2}°C" | tee -a "$LOGFILE"
 
     # Check if either CPU is over safety limit  
     if [[ "$TEMPCPU1" -gt "$CPU1MAX" || "$TEMPCPU2" -gt "$CPU2MAX" ]]; then
         ipmitool raw 0x30 0x30 0x01 0x01
-        echo "SAFETY: CPU temp exceeded ${CPU1MAX}°C - reverted to auto fan control"
-        echo "CPU1: ${TEMPCPU1}°C, CPU2: ${TEMPCPU2}°C"
+        echo "SAFETY: CPU temp exceeded ${CPU1MAX}°C - reverted to auto fan control" | tee -a "$LOGFILE"
+        echo "CPU1: ${TEMPCPU1}°C, CPU2: ${TEMPCPU2}°C" | tee -a "$LOGFILE"
         exit 1
     fi
     
     # Wait 30 seconds before next check
     sleep 30
 done
+
+# COPY/PASTE LOG COMMANDS (these are just comments for reference):
+# View current log: cat /tmp/fanscript.log
+# View last 20 lines: tail -20 /tmp/fanscript.log
+# Follow live: tail -f /tmp/fanscript.log
+# Previous runs: cat /tmp/fanscript.log.1 or cat /tmp/fanscript.log.2
+# List all: ls -la /tmp/fanscript.log*
