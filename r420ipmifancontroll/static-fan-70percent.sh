@@ -134,3 +134,22 @@ done
 # Follow live: tail -f /tmp/fanscript.log
 # Previous runs: cat /tmp/fanscript.log.1 or cat /tmp/fanscript.log.2
 # List all: ls -la /tmp/fanscript.log*
+
+# Start screen session
+screen -S fancontrol
+
+# Run the script inside screen
+./static-fan-70percent.sh
+
+# screen -S fancontrol
+cd /root/IPMI-Script-Dell-r420/r420ipmifancontroll
+./static-fan-70percent.sh
+
+
+#To tail the log from another terminal:
+tail -f /tmp/fanscript.log
+
+
+
+
+
