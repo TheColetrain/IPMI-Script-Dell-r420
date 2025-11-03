@@ -47,6 +47,15 @@ FANNAME=$(set | grep "STATICFAN=" | cut -d'$' -f2)
 #Hex conversion https://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html
 # type 40% as "40" into "decimal" box amd then add prefix of "0x"
 
+FS76=0x4c
+FS74=0x4a
+FS72=0x48
+FS70=0x46
+FS68=0x44
+FS66=0x42
+FS64=0x40
+FS62=0x3e
+FS60=0x3c
 FS60=0x3c
 FS58=0x3a
 FS56=0x38
