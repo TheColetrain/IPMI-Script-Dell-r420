@@ -86,20 +86,28 @@ echo CPU 2 TEMP     "$TEMPCPU2"  C
 
 # part 5 - FINALE - this pulls it all together. IF temp over X then issue fan controll to AUTO
 
+echo "=== Setting fans to static 40% and starting monitoring ==="
+# Set static fan speed first
+ipmitool raw 0x30 0x30 0x01 0x00
+ipmitool raw 0x30 0x30 0x02 0xff "$STATICFAN"
+echo "Static fan set to 40%. Starting temperature monitoring..."
 
+# Monitoring loop
+while true; do
+    # Get current temperatures
+    TEMPCPU1=`ipmitool sdr type temperature | grep "Temp" | cut -d"|" -f5 | cut -d" " -f2 | sed -n 2p`
+    TEMPCPU2=`ipmitool sdr type temperature | grep "Temp" | cut -d"|" -f5 | cut -d" " -f2 | sed -n 3p`
 
+    echo "$(date): CPU1: ${TEMPCPU1}°C, CPU2: ${TEMPCPU2}°C"
 
-# Check if either CPU is over safety limit
-if [[ "$TEMPCPU1" > "$CPUMAXTEMP" || "$TEMPCPU2" > "$CPUMAXTEMP" ]]
-then
-    ipmitool raw 0x30 0x30 0x01 0x01
-    echo "SAFETY: CPU temp exceeded $CPUMAXTEMP°C - reverted to auto fan control"
-    exit 1
-else
-    # Set static 40% fan speed
-    ipmitool raw 0x30 0x30 0x01 0x00
-    ipmitool raw 0x30 0x30 0x02 0xff "$STATICFAN"
-    echo "Static fan set to 40% - CPU1: $TEMPCPU1°C, CPU2: $TEMPCPU2°C"
-fi
-
-
+    # Check if either CPU is over safety limit  
+    if [[ "$TEMPCPU1" -gt "$CPU1MAX" || "$TEMPCPU2" -gt "$CPU2MAX" ]]; then
+        ipmitool raw 0x30 0x30 0x01 0x01
+        echo "SAFETY: CPU temp exceeded ${CPU1MAX}°C - reverted to auto fan control"
+        echo "CPU1: ${TEMPCPU1}°C, CPU2: ${TEMPCPU2}°C"
+        exit 1
+    fi
+    
+    # Wait 30 seconds before next check
+    sleep 30
+done
