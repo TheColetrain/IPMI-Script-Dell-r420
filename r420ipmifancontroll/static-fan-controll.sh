@@ -131,7 +131,7 @@ while true; do
     fi
     
     # Wait 30 seconds before next check
-    sleep 10
+    sleep 30
 done
 
 
