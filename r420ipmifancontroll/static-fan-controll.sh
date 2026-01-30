@@ -17,8 +17,8 @@ trap 'echo "Script interrupted - reverting to auto fan control..."; ipmitool raw
 #### part one - SET VARIABLES 
 
 # set CPU1 & CPU2 MAX TEMP
-CPU1MAX=75
-CPU2MAX=75
+CPU1MAX=78
+CPU2MAX=78
 
 
 
@@ -151,7 +151,7 @@ screen -S fancontrol
 ./static-fan-controll.sh
 
 # screen -S fancontrol
-cd /root/IPMI-Script-Dell-r420/r420ipmifancontroll
+cd /opt/IPMI-Script-Dell-r420/r420ipmifancontroll
 ./static-fan-controll.sh
 
 
